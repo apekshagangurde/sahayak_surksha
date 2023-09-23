@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ... (head content) ... -->
+</head>
+<body>
+    
+    <div>
+        <button id="addButton" style="position: absolute; top: 10px; right: 10px; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">Add</button>
+        <h1>Associated IDs for <span id="placeName"></span></h1>
+        <pre id="associatedIds"></pre>
+        <div id="addPoliceForm" style="display: none;">
+            <label for="policeDropdown">Select Police Officer:</label>
+            <select id="policeDropdown"></select>
+            <button id="submitButton" style="background-color: #800080; color: white; padding: 10px 20px; border: none; cursor: pointer; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); margin-top: 10px;">Submit</button>
+        </div>
+
+    <script>
+        window.onload = function () {
+            const addButton = document.getElementById("addButton");
+            addButton.addEventListener("click", () => {
+                // Add your logic for the "Add" button click event here
+                // For example, you can redirect to a new page or perform an action
+                // window.location.href = "add.html";
+                // or
+                // performAction();
+            });
+
+            const selectedPlace = localStorage.getItem("selectedPlace");
+            const associatedIds = JSON.parse(localStorage.getItem("associatedIds"));
+
+            if (selectedPlace && associatedIds && associatedIds.length > 0) {
+                const placeNameElement = document.getElementById("placeName");
+                placeNameElement.textContent = selectedPlace;
+
+                const associatedIdsElement = document.getElementById("associatedIds");
+                const associatedIdsText = associatedIds.map(id => `${selectedPlace}: ${id}`).join("\n");
+                associatedIdsElement.textContent = associatedIdsText;
+            } else {
+                // Handle the situation where data is missing or invalid
+                const placeNameElement = document.getElementById("placeName");
+                placeNameElement.textContent = "No Data Available";
+
+                const associatedIdsElement = document.getElementById("associatedIds");
+                associatedIdsElement.textContent = "No Associated IDs Available";
+            }
+        };
+    </script>
+</body>
+</html>

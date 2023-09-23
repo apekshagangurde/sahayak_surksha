@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Place and ID | Sahayak Surksha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f1f1f1;
+        }
+
+        .header {
+            font-size: 30px;
+            font-weight: bold;
+            padding: 20px;
+            color: #800080;
+            /* Heading text color (purple) */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            /* Heading shadow */
+            animation: headingAnimation 2s infinite;
+            /* Heading animation */
+        }
+
+        .select-container {
+            margin-top: 50px;
+        }
+
+        .select-container label {
+            font-size: 18px;
+        }
+
+        .select-container select {
+            font-size: 16px;
+            margin: 10px;
+            padding: 5px;
+        }
+
+        .add-option-button {
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #4CAF50;
+            /* Green color for the button */
+            color: #fff;
+            /* Text color for the button */
+            padding: 5px 10px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            /* Button shadow */
+        }
+
+        .submit-button {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #800080;
+            /* Purple color for the button */
+            color: #fff;
+            /* Text color for the button */
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            /* Button shadow */
+        }
+
+        /* Dynamic table Design Added by AA */
+
+        table {
+            border-collapse: collapse;
+            width: 60%;
+            margin: auto;
+        }
+
+        /* Style the table header */
+        th {
+            background-color: #e4bdff;
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* Style the table cells */
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Alternate row background color for better readability */
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Style the table container */
+        #table-container {
+            margin-top: 70px;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Dynamic table Design end */
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        Sahayak Surksha - Select Place and ID
+    </div>
+    <div class="select-container" id="selectContainer">
+        <label for="placeSelect">Select a place:</label>
+        <select id="placeSelect">
+            <option value="">Select</option>
+            <!-- Existing place options will be populated here -->
+        </select>
+        <button class="add-option-button" onclick="addPlaceOption()">Add Place</button>
+
+        <br><br>
+
+        <label for="idSelect">Select an ID:</label>
+        <select id="idSelect">
+            <option value="">Select</option>
+            <!-- Existing ID options will be populated here -->
+        </select>
+        <button class="add-option-button" onclick="addIdOption()">Add ID</button>
+
+        <br><br>
+
+        <button class="submit-button" id="btnsubmit">Submit</button>
+    </div>
+
+    <div id="table-container"></div>
+
+    <script>
+        function addPlaceOption() {
+            const newPlaceOption = prompt("Enter the new place:");
+            if (newPlaceOption) {
+                const placeSelect = document.getElementById("placeSelect");
+
+                // Check if the place already exists in the options
+                const options = placeSelect.options;
+                const exists = Array.from(options).some(option => option.value === newPlaceOption);
+
+                if (!exists) {
+                    const newOption = document.createElement("option");
+                    newOption.value = newPlaceOption;
+                    newOption.innerText = newPlaceOption;
+                    placeSelect.appendChild(newOption);
+                } else {
+                    alert("This place already exists in the list.");
+                }
+            }
+        }
+
+        function addIdOption() {
+            const newIdOption = prompt("Enter the new ID:");
+            if (newIdOption) {
+                const idSelect = document.getElementById("idSelect");
+
+                // Check if the ID already exists in the options
+                const options = idSelect.options;
+                const exists = Array.from(options).some(option => option.value === newIdOption);
+
+                if (!exists) {
+                    const newOption = document.createElement("option");
+                    newOption.value = newIdOption;
+                    newOption.innerText = newIdOption;
+                    idSelect.appendChild(newOption);
+                } else {
+                    alert("This ID already exists in the list.");
+                }
+            }
+        }
+
+    </script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+        import { getFirestore, collection, doc, addDoc, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js"; // Add Firestore library imports 
+
+        document.getElementById('btnsubmit').addEventListener('click', submitSelection, true);
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhOsABlPM4gi_ySMFv9RUmxTEsR_bhHAE",
+            authDomain: "web-auth-928f5.firebaseapp.com",
+            projectId: "web-auth-928f5",
+            storageBucket: "web-auth-928f5.appspot.com",
+            messagingSenderId: "1017247121723",
+            appId: "1:1017247121723:web:c0a38d2f7cdf1f6a88b71e",
+            measurementId: "G-7DJCNSP54E"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app); // Initialize Firestore
+
+        const AllData = [];
+
+        function submitSelection() {
+            const placeSelect = document.getElementById("placeSelect");
+            const selectedPlace = placeSelect.value;
+            const selectedId = document.getElementById("idSelect").value;
+
+            if (selectedPlace !== "" && selectedId !== "") {
+                // Retrieve existing data from localStorage or initialize an empty array
+                const storedData = JSON.parse(localStorage.getItem("assignedData")) || [];
+
+                // Check if the combination of place and ID already exists
+                const exists = storedData.some(data => data.place === selectedPlace && data.id === selectedId);
+
+                if (!exists) {
+                    // Get the current date and time
+                    const currentDate = new Date();
+                    const dateTime = currentDate.toLocaleString();
+
+                    // Add the new place, ID, and date to the storedData array
+                    storedData.push({ place: selectedPlace, id: selectedId, date: dateTime });
+
+                    // Save the updated data back to localStorage
+                    localStorage.setItem("assignedData", JSON.stringify(storedData));
+
+                    // /////Send Data to firebase ....Added by AA...//////
+
+
+                    // Your web app's Firebase configuration
+                    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+
+                    console.log("selectedPlace", selectedPlace);
+                    console.log("selectedId", selectedId);
+                    addDoc(collection(db, "duty_location"), {
+                        locationId: selectedId,
+                        locationName: selectedPlace,
+                        date: currentDate
+                    })
+                        .then(() => {
+                            alert("Location data stored successfully!");
+                            form.reset(); // Clear the form after successful registration
+                        })
+                        .catch((error) => {
+                            console.error("Error storing police data: ", error);
+                        });
+
+
+                    ///////Send data to firebase end///////
+
+                    // Redirect back to assign.html page
+                    window.location.href = "assign.html";
+                } else {
+                    alert("This combination of Place and ID already exists.");
+                }
+            } else {
+                alert("Please select a Place and ID before submitting.");
+            }
+        }
+
+        async function getAllData() {
+
+            const querySnapshot = await getDocs(collection(db, "duty_location"));
+            console.log("All Data", querySnapshot);
+            querySnapshot.forEach((doc) => {
+                AllData.push({
+                    id: doc.id,
+                    'location id': doc.data().locationId,
+                    'location': doc.data().locationName,
+                    date: doc.data().date.toDate().toLocaleString()
+
+                    // data: doc.data()
+                });
+                // doc.data() is never undefined for query doc snapshots
+                // console.log("Firebase Data", doc.data());
+                // console.log(doc.id, " => ", doc.data());
+            });
+
+            return AllData
+        }
+
+        async function deleteRow(id) {
+            console.log("id", id);
+            // Find the index of the row with the given id in the data array
+            const rowIndex = AllData.findIndex((item) => item.id === id.id);
+            if (rowIndex !== -1) {
+                // Remove the row from the AllData array
+                AllData.splice(rowIndex, 1);
+                // Re-render the table
+                // createTable(AllData);
+
+                try {
+                    const docRef = doc(db, 'duty_location', id.id);
+                    await deleteDoc(docRef);
+                    console.log("Document deleted successfully!");
+                } catch (error) {
+                    console.error("Error deleting document: ", error);
+
+                }
+
+
+
+                location.reload();
+            }
+        }
+
+
+        function createTable(data) {
+            const tableContainer = document.getElementById("table-container");
+            const table = document.createElement("table");
+
+            // Create table header row
+            const headerRow = document.createElement("tr");
+            for (const key in data[0]) {
+                const th = document.createElement("th");
+                th.textContent = key.toUpperCase();
+                headerRow.appendChild(th);
+            }
+            table.appendChild(headerRow);
+
+            // Create table rows and cells
+            data.forEach((rowData) => {
+                const row = document.createElement("tr");
+                for (const key in rowData) {
+                    const cell = document.createElement("td");
+                    cell.textContent = rowData[key];
+                    row.appendChild(cell);
+                }
+
+                const deleteCell = document.createElement("td");
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.classList.add("delete-btn");
+                deleteButton.addEventListener("click", () => deleteRow(rowData));
+                deleteCell.appendChild(deleteButton);
+                row.appendChild(deleteCell);
+
+                table.appendChild(row);
+            });
+
+            tableContainer.appendChild(table);
+        }
+        // Load the stored options from localStorage on page load
+        window.onload = async function () {
+            /////////////Get All Data from firebas Added by AA////////////
+            getAllData().then((data) => {
+                createTable(data);
+                console.log(data);
+            });
+            /////////////Get All Data from firebas end////////////
+
+
+            const placeSelect = document.getElementById("placeSelect");
+            const idSelect = document.getElementById("idSelect");
+
+            const storedPlaceOptions = JSON.parse(localStorage.getItem("placeOptions")) || [];
+            const storedIdOptions = JSON.parse(localStorage.getItem("idOptions")) || [];
+
+            storedPlaceOptions.forEach(place => {
+                const newOption = document.createElement("option");
+                newOption.value = place;
+                newOption.innerText = place;
+                placeSelect.appendChild(newOption);
+            });
+
+            storedIdOptions.forEach(id => {
+                const newOption = document.createElement("option");
+                newOption.value = id;
+                newOption.innerText = id;
+                idSelect.appendChild(newOption);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

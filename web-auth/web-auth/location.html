@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Location | Sahayak Surksha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f1f1f1;
+        }
+        .header {
+            font-size: 30px;
+            font-weight: bold;
+            padding: 20px;
+            color: #800080; /* Heading text color (purple) */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Heading shadow */
+            animation: headingAnimation 2s infinite; /* Heading animation */
+        }
+        .form-container {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .form {
+            border: 2px solid #800080; /* Purple border */
+            border-radius: 5px;
+            padding: 20px;
+            max-width: 300px;
+        }
+        .form label {
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .form button[type="submit"] {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #4CAF50; /* Green color for the button */
+            color: #fff; /* Text color for the button */
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Button shadow */
+        }
+        .form button[type="submit"]:hover {
+            background-color: #45a049; /* Darker green color on hover */
+        }
+        .form button[type="submit"]:focus {
+            outline: none; /* Remove focus outline on click */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        Sahayak Surksha - Enter Location
+    </div>
+    <div class="form-container">
+        <form class="form" onsubmit="submitLocation(event)">
+            <label for="location">Enter Location:</label>
+            <input type="text" id="location" name="location" placeholder="Enter the location" required>
+            <label for="boardId">Enter Board ID:</label>
+            <input type="text" id="boardId" name="boardId" placeholder="Enter the board ID" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function submitLocation(event) {
+            event.preventDefault();
+           
+            const locationInput = document.getElementById("location");
+            const boardIdInput = document.getElementById("boardId");
+            const locationValue = locationInput.value;
+            const boardIdValue = boardIdInput.value;
+
+            // Process the location value here (e.g., store in local storage, send to server, etc.)
+            
+            alert(`Location submitted: ${locationValue}, Board ID submitted: ${boardIdValue}`);
+
+            // Redirect to another page or perform any other action after submitting the location.
+            // For example, you can navigate back to the main page or perform some other action.
+            window.location.href = "assign.html"; // Replace "index.html" with the name of your main page.
+        }
+    </script>
+</body>
+</html>

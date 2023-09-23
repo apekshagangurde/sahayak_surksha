@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Duties | Sahayak Surksha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f1f1f1;
+        }
+        .header {
+            font-size: 30px;
+            font-weight: bold;
+            padding: 20px;
+            color: #800080; /* Heading text color (purple) */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Heading shadow */
+            animation: headingAnimation 2s infinite; /* Heading animation */
+        }
+       
+        
+        .welcome-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 50px;
+        }
+        .folder-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .folder {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .download-button {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #800080; /* Purple color for the button */
+            color: #fff; /* Text color for the button */
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Button shadow */
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .clear-button {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #FF0000; /* Red color for the button */
+            color: #fff; /* Text color for the button */
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Button shadow */
+        }
+
+        .clear-button:hover {
+            background-color: #E60000; /* Darker red color on hover */
+        }
+
+        .clear-button:focus {
+            outline: none; /* Remove focus outline on click */
+        }
+
+        .register-button {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #4CAF50; /* Green color for the button */
+            color: #fff; /* Text color for the button */
+            padding: 10px 20px;
+            margin-top: 10px;
+            margin-right: 10px; /* Add some right margin to create space between buttons */
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Button shadow */
+            float: right; /* Float the button to the right */
+        }
+
+        .register-button:hover {
+            background-color: #45a049; /* Darker green color on hover */
+        }
+
+        .register-button:focus {
+            outline: none; /* Remove focus outline on click */
+        }
+
+        .add-location-button {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #4CAF50; /* Green color for the button */
+            color: #fff; /* Text color for the button */
+            padding: 10px 20px;
+            margin-top: 10px;
+            margin-right: 10px; /* Add some right margin to create space between buttons */
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Button shadow */
+            float: right; /* Float the button to the right */
+        }
+
+        .add-location-button:hover {
+            background-color: #45a049; /* Darker green color on hover */
+        }
+
+        .add-location-button:focus {
+            outline: none; /* Remove focus outline on click */
+        }
+
+        /* Move the "Assign Duties" button to the right corner */
+        .assign-button {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #4CAF50; /* Green color for the button */
+            color: #fff; /* Text color for the button */
+            padding: 10px 20px;
+            margin-top: 10px;
+            margin-right: 10px; /* Add some right margin to create space between buttons */
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Button shadow */
+            float: right; /* Float the button to the right */
+        }
+
+        .assign-button:hover {
+            background-color: #45a049; /* Darker green color on hover */
+        }
+
+        .assign-button:focus {
+            outline: none; /* Remove focus outline on click */
+        }
+        .button-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        Sahayak Surksha -DashBoard
+    </div>
+    
+    <div class="welcome-text">
+        Welcome to Sahayak Surksha!
+    </div>
+    
+    <div class="folder-container" id="folderContainer">
+        <!-- The folder will be created here -->
+    </div>
+    
+    <!-- ... (existing content) ... -->
+    <div class="button-container">
+        <button class="register-button" onclick="goToAddUserPage()">Register Police</button>
+        <button class="add-location-button" onclick="goToAddLocationPage()">Add Location</button>
+        <button class="assign-button" onclick="goToSelectPage()">Assign Duties</button>
+    </div>
+
+    <button class="download-button" onclick="downloadData()">Download Data</button>
+    <button class="clear-button" onclick="clearData()">Clear Data</button>
+
+    <script>
+
+        function goToAddUserPage() {
+            window.location.href = "add_user.html";
+        }
+
+        function goToAddLocationPage() {
+            window.location.href = "location.html";
+        }
+
+        function createFolder(place) {
+            // Create a new element representing the folder
+            const folder = document.createElement("div");
+            folder.className = "folder";
+            folder.innerText = place;
+            folder.addEventListener("click", showAssociatedIds);
+    
+            // Append the folder to the folder container
+            const folderContainer = document.getElementById("folderContainer");
+            folderContainer.appendChild(folder);
+        }
+    
+        function showAssociatedIds(event) {
+            const selectedPlace = event.target.innerText;
+            const storedData = JSON.parse(localStorage.getItem("assignedData")) || [];
+            const ids = storedData.filter(data => data.place === selectedPlace).map(data => data.id).join("\n");
+            alert(`Place: ${selectedPlace}\nIDs: \n${ids}`);
+        }
+    
+        function goToSelectPage() {
+            window.location.href = "select.html";
+        }
+    
+        function downloadData() {
+            const storedData = JSON.parse(localStorage.getItem("assignedData"));
+    
+            if (storedData && storedData.length > 0) {
+                const csvContent = convertToCSV(storedData);
+                const blob = new Blob([csvContent], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `assigned_data_${getFormattedDate()}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                alert("No data to download.");
+            }
+        }
+    
+        function convertToCSV(data) {
+            const csvRows = [];
+            const headers = ["Place", "ID", "Date"];
+            csvRows.push(headers.join(","));
+    
+            for (const row of data) {
+                const values = [row.place, row.id, row.date];
+                csvRows.push(values.join(","));
+            }
+    
+            return csvRows.join("\n");
+        }
+    
+        function clearData() {
+            localStorage.removeItem("assignedData");
+            const folderContainer = document.getElementById("folderContainer");
+            folderContainer.innerHTML = "";
+        }
+    
+        function getFormattedDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, "0");
+            const day = String(today.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+    
+        // On page load, create folders for each place
+        window.onload = function () {
+            const storedData = JSON.parse(localStorage.getItem("assignedData")) || [];
+            const places = [...new Set(storedData.map(data => data.place))];
+            places.forEach(place => createFolder(place));
+        };
+    </script>
+    
+    </body>
+    </html>

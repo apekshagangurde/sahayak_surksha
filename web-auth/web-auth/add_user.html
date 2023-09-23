@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Registration | Sahayak Surksha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f1f1f1;
+        }
+
+        /* Add your CSS styles here */
+        h1 {
+            font-size: 24px;
+            color: #800080;
+            margin-top: 30px;
+        }
+
+        form {
+            margin-top: 30px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            color: #800080;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            font-size: 16px;
+            padding: 5px;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"] {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #4CAF50;
+            /* Green color for the button */
+            color: #fff;
+            /* Text color for the button */
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            /* Button shadow */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+            /* Darker green color on hover */
+        }
+
+        /* Dynamic table Design Added by AA */
+
+        table {
+            border-collapse: collapse;
+            width: 60%;
+            margin: auto;
+        }
+
+        /* Style the table header */
+        th {
+            background-color: #e4bdff;
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* Style the table cells */
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Alternate row background color for better readability */
+        tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+        /* Style the table container */
+        #table-container {
+            margin-top: 70px;
+        }
+
+        /* Dynamic table Design end */
+    </style>
+</head>
+
+<body>
+    <h1>Police Registration</h1>
+    <form id="registrationForm">
+        <!-- The form for police registration -->
+        <label for="chipId">Chip ID:</label>
+        <input type="text" id="chipId" required>
+        <br>
+        <label for="policeName">Police Name:</label>
+        <input type="text" id="policeName" required>
+        <br>
+        <button type="submit">Register Police</button>
+        <!-- The button to submit the police registration form -->
+    </form>
+
+    <div id="table-container"></div>
+
+    <!-- JavaScript libraries for Firebase -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js"; // Add Firestore library imports
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhOsABlPM4gi_ySMFv9RUmxTEsR_bhHAE",
+            authDomain: "web-auth-928f5.firebaseapp.com",
+            projectId: "web-auth-928f5",
+            storageBucket: "web-auth-928f5.appspot.com",
+            messagingSenderId: "1017247121723",
+            appId: "1:1017247121723:web:c0a38d2f7cdf1f6a88b71e",
+            measurementId: "G-7DJCNSP54E"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app); // Initialize Firestore
+
+        /* Your JavaScript code for add_user.html */
+        // Function to handle police registration
+        function registerPolice(event) {
+            event.preventDefault();
+            const chipId = document.getElementById("chipId").value.trim();
+            const policeName = document.getElementById("policeName").value.trim();
+
+            console.log("chipId:", chipId);
+            console.log("policeName:", policeName);
+
+            // Check if both fields are filled
+            if (!chipId || !policeName) {
+                alert("Please fill out all fields.");
+                return;
+            }
+
+            // Add the police data to the "police" collection in Firestore
+            addDoc(collection(db, "police"), {
+                chipId: chipId,
+                policeName: policeName,
+            })
+                .then(() => {
+                    alert("Police data stored successfully!");
+                    form.reset(); // Clear the form after successful registration
+                })
+                .catch((error) => {
+                    console.error("Error storing police data: ", error);
+                });
+        }
+
+        async function getAllData() {
+
+            const AllData = [];
+            const querySnapshot = await getDocs(collection(db, "police"));
+            console.log("All Data", querySnapshot);
+
+            // console.log("All Data ",doc.data());
+
+            querySnapshot.forEach((doc) => {
+                AllData.push({
+                    // id: doc.id,
+                    'chip id': doc.data().chipId,
+                    'police name': doc.data().policeName
+                    // data: doc.data()
+                });
+                // doc.data() is never undefined for query doc snapshots
+                // console.log("Firebase Data", doc.data());
+                // console.log(doc.id, " => ", doc.data());
+            });
+
+            return AllData
+        }
+
+
+        function createTable(data) {
+            const tableContainer = document.getElementById("table-container");
+            const table = document.createElement("table");
+
+            // Create table header row
+            const headerRow = document.createElement("tr");
+            for (const key in data[0]) {
+                const th = document.createElement("th");
+                th.textContent = key.toUpperCase();
+                headerRow.appendChild(th);
+            }
+            table.appendChild(headerRow);
+
+            // Create table rows and cells
+            data.forEach((rowData) => {
+                const row = document.createElement("tr");
+                for (const key in rowData) {
+                    const cell = document.createElement("td");
+                    cell.textContent = rowData[key];
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            });
+
+            tableContainer.appendChild(table);
+        }
+
+        window.onload = async function () {
+            getAllData().then((data) => {
+                createTable(data);
+                console.log(data);
+            });
+        }
+
+        // Add event listener to the form submit button
+        const form = document.getElementById("registrationForm");
+        form.addEventListener("submit", registerPolice);
+
+        console.log("Running police registration code...");
+    </script>
+</body>
+
+</html>
